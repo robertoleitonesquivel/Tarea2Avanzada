@@ -167,21 +167,29 @@ public class frmCurso extends javax.swing.JFrame {
             if (this.txtID.getText().equals("")
                     && this.txtNombre.getText().equals("")
                     && this.txtMaximoEstudiantes.getText().equals("")
-                    && this.rbPresencial.isSelected() == false 
+                    && this.rbPresencial.isSelected() == false
                     && this.rbVirtual.isSelected() == false) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios..!!!");
             } else if (validateField()) {
+
                 Curso curso = new Curso();
                 curso.setId(Integer.parseInt(this.txtID.getText()));
                 curso.setNombre(this.txtNombre.getText());
                 curso.setModalidad(this.rbPresencial.isSelected() ? "Presencial" : "Virtual");
                 curso.setCantidadMaximaEstudiantes(Integer.parseInt(this.txtMaximoEstudiantes.getText()));
 
-                cursoRepository.insert(curso);
+                if (this.cursoRepository.Unique(curso.getId())) {
 
-                this.displayCursos();
+                    cursoRepository.insert(curso);
 
-                JOptionPane.showMessageDialog(this, "Insertado con exito..!!!");
+                    this.displayCursos();
+                    
+                     JOptionPane.showMessageDialog(this, "Insertado con exito..!!!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El Id del curso ya existe..!!!");
+                }
+
+               
             } else {
                 JOptionPane.showMessageDialog(this, "El Id y la cantidad deben ser numeros enteros..!!!");
             }
@@ -195,7 +203,7 @@ public class frmCurso extends javax.swing.JFrame {
             Pattern numeros = Pattern.compile("^([1-9]{1,})([0-9]{1,})?$");
             Matcher m = numeros.matcher(this.txtID.getText());
             Matcher m1 = numeros.matcher(this.txtMaximoEstudiantes.getText());
-            
+
             if (m.matches() && m1.matches()) {
                 return true;
             } else {

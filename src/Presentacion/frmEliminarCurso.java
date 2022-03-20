@@ -65,7 +65,7 @@ public class frmEliminarCurso extends javax.swing.JFrame {
             Curso c = (Curso) this.txtCurso.getSelectedItem();
 
             if (c != null) {
-                this.cursoRepository.deleteCurso(c);
+                this.cursoRepository.deleteCurso();
                 
                 this.txtCurso.removeAllItems();
                 

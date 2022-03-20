@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 public class frmEstudiantes extends javax.swing.JFrame {
 
     private CursoRepository cursoRepository = null;
+    int maximo = 0;
 
     public frmEstudiantes() {
         initComponents();
@@ -32,6 +33,12 @@ public class frmEstudiantes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCursoActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("GUARDAR");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -73,13 +80,23 @@ public class frmEstudiantes extends javax.swing.JFrame {
         try {
             if (!this.txtNombre.getText().equals("") && this.txtCurso.getSelectedItem() != null) {
 
-                CursoEstudiante estudiante = new CursoEstudiante();
-                estudiante.setNombre(this.txtNombre.getText());
-                estudiante.setCurso((Curso) this.txtCurso.getSelectedItem());
+                Curso cur = (Curso) this.txtCurso.getSelectedItem();
 
-                this.cursoRepository.insertEstudiante(estudiante);
+                if (maximo < cur.getCantidadMaximaEstudiantes()) {
 
-                JOptionPane.showMessageDialog(this, "Insertado con exito..!!!");
+                    CursoEstudiante estudiante = new CursoEstudiante();
+                    estudiante.setNombre(this.txtNombre.getText());
+                    estudiante.setCurso((Curso) this.txtCurso.getSelectedItem());
+
+                    this.cursoRepository.insertEstudiante(estudiante);
+
+                    JOptionPane.showMessageDialog(this, "Insertado con exito..!!!");
+
+                    maximo++;
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se permite agregar mas estudiantes a este curso..!!!");
+                }
 
             } else {
                 JOptionPane.showMessageDialog(this, "Todos los datos son requeridos..!!!");
@@ -88,6 +105,18 @@ public class frmEstudiantes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void txtCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCursoActionPerformed
+        if (maximo > 0) {
+            Curso cur = (Curso) this.txtCurso.getSelectedItem();
+
+            if (this.cursoRepository.completoCupos(cur.getId(), maximo)) {
+                maximo = 1;
+            } else {
+                JOptionPane.showMessageDialog(this, "Los cupos  para el curso " + cur.getNombre() + " estan llenos ..!!!");
+            }
+        }
+    }//GEN-LAST:event_txtCursoActionPerformed
 
     public static void main(String args[]) {
 

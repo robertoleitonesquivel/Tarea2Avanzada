@@ -81,13 +81,15 @@ public class CursoRepository {
         }
     }
 
-    public void deleteCurso(Curso c) throws Exception {
+    public void deleteCurso() throws Exception {
         try {
             if (!cursos.isEmpty()) {
 
                 boolean si = false;
-                
-                for(int i = 0; i < estudiantes.size(); i++){
+
+                Curso c = cursos.peek();
+
+                for (int i = 0; i < estudiantes.size(); i++) {
                     if (estudiantes.get(i).getCurso() == c) {
                         si = true;
                         break;
@@ -103,6 +105,41 @@ public class CursoRepository {
                 throw new Exception("No hay cursos para eliminar...!!!");
             }
         } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
+    public boolean Unique(int Id) {
+        try {
+            if (!cursos.isEmpty()) {
+
+                for (Curso cu : cursos) {
+                    if (cu.getId() == Id) {
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+    
+    public boolean completoCupos(int Id, int maximo){
+        try{
+            int cantidad = 0;
+            for(int i = 0; i < estudiantes.size(); i++){
+                if(estudiantes.get(i).getCurso().getId() == Id){
+                    cantidad++;
+                }
+            }
+            if(cantidad == maximo){
+               return false; 
+            }else{
+                return true;
+            }
+        }catch(Exception ex){
             throw ex;
         }
     }
